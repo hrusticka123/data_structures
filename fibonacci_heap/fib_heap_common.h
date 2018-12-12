@@ -8,15 +8,23 @@ namespace fibonacci_heap
 		node * child;
 		node * next;
 		node * previous;
+		int identifier;
+		~node() { 
+			delete parent; parent = nullptr;
+			delete child; child = nullptr;
+			delete next; next = nullptr;
+			delete previous; previous = nullptr;
+		}
 	};
 
 	class common_heap
 	{
 	public:
-		void reset();
+		common_heap() { h = new node(); }
 		void insert(int identifier, int key);
 		void delete_min();
 		void decrease(int identifier, int key);
+		~common_heap() { delete h; }
 	protected:
 		node * h;
 	};

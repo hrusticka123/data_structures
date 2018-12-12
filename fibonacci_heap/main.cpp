@@ -11,15 +11,9 @@ int main(int argc, char ** argv)
 	if (argc == 2)
 	{
 		argument = argv[1];
-		if (argument == "naive")
-			h = fibonacci_heap::naive_heap();
-		else if (argument == "normal")
-			h = fibonacci_heap::heap();
-		else
-			throw std::exception("Unknown argument");
 	}
 	else if (argc == 1)
-		h = fibonacci_heap::heap();
+		argument = "normal";
 	else 
 		throw std::exception("Wrong arguments");
 
@@ -33,7 +27,10 @@ int main(int argc, char ** argv)
 		{
 		case '#':
 			std::cin >> key;
-			h.reset();
+			if (argument == "naive")
+				h = fibonacci_heap::naive_heap();
+			else
+				h = fibonacci_heap::heap();
 			break;
 		case 'I':
 			std::cin >> identifier;
