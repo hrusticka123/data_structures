@@ -1,9 +1,6 @@
-﻿# CMakeList.txt : Top-level CMake project file, do global configuration
-# and include sub-projects here.
-#
+﻿
+project(fibonacci_heap)
+
 cmake_minimum_required (VERSION 3.8)
 
-project ("fibonacci_heap")
-
-# Include sub-projects.
-add_subdirectory ("fibonacci_heap")
+add_executable (fibonacci_heap "main.cpp" "fib_heap.cpp" "fib_heap_common.cpp" "fib_heap_naive.cpp")
