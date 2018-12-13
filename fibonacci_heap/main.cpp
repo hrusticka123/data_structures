@@ -27,22 +27,31 @@ int main(int argc, char ** argv)
 		{
 		case '#':
 			std::cin >> key;
+			h.reset();
 			if (argument == "naive")
 				h = fibonacci_heap::naive_heap();
 			else
 				h = fibonacci_heap::heap();
+			//dev
+			std::cout << std::endl << command << " " << key << std::endl;
 			break;
 		case 'I':
 			std::cin >> identifier;
 			std::cin >> key;
+			//dev
+			std::cout << std::endl << command << " " << identifier << " " << key << std::endl;
 			h.insert(identifier, key);
 			break;
 		case 'M':
+			//dev
+			std::cout << std::endl << command << std::endl;
 			h.delete_min();
 			break;
 		case 'D':
 			std::cin >> identifier;
 			std::cin >> key;
+			//dev
+			std::cout << std::endl << command << " " << identifier << " " << key << std::endl;
 			h.decrease(identifier, key);
 			break;
 		}
