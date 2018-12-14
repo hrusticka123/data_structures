@@ -11,6 +11,7 @@ namespace fibonacci_heap
 		node * previous;
 		int identifier;
 		int key = 0;
+		int degree = 0;
 		bool marked = false;
 	};
 
@@ -26,9 +27,11 @@ namespace fibonacci_heap
 		~common_heap() { clear(min); }
 	protected:
 		node * min;
-		void traverse();
+		void traverse(node * n);
 		node * cut(node * heap, node * node);
 		node * merge(node * first, node * second);
 		void clear(node * heap);
+		void separate(node * node);
+		void add(node * parent, node* child);
 	};
 }

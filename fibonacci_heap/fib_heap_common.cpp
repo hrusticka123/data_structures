@@ -10,13 +10,83 @@ void common_heap::insert(int identifier, int key)
 	node * new_node = new node(identifier, key);
 	min = merge(min, new_node);
 	//dev
-	traverse();
+	traverse(min);
 }
 
 
 void common_heap::delete_min()
 {
 	std::cout << "Min is " << "(" << min->key << "," << min->identifier << ")" << std::endl;
+	auto node = min;
+	separate(node->child);
+	if (node->next == node)
+		node = node->child;
+	else
+	{
+		node->next->previous = node->previous;
+		node->previous->next = node->next;
+		node = merge(node->next, node->child);
+	}
+
+	if (node != nullptr)
+	{
+		fibonacci_heap::node * heaps[100];
+		std::fill_n(heaps, 100, nullptr);
+
+		while (true)
+		{
+			if (heaps[node->degree] != nullptr)
+			{
+				auto heap = heaps[node->degree];
+				if (heap == node)
+					break;
+				heaps[node->degree] = nullptr;
+				if (node->key < heap->key)
+				{
+					heap->previous->next = heap->next;
+					heap->next->previous = heap->previous;
+					add(node, heap);
+				}
+				else
+				{
+					heap->previous->next = heap->next;
+					heap->next->previous = heap->previous;
+					if (node->next == node)
+					{
+						heap->next = heap->previous = heap;
+						add(heap, node);
+						node = heap;
+					}
+					else
+					{
+						node->previous->next = heap;
+						node->next->previous = heap;
+						heap->next = node->next;
+						heap->previous = node->previous;
+						add(heap, node);
+						node = heap;
+					}
+				}
+				continue;
+			}
+			else
+				heaps[node->degree] = node;
+			node = node->next;
+		}
+
+		auto temp = node;
+		auto new_min = node;
+		do
+		{
+			if (temp->key < new_min->key)
+				new_min = temp;
+			temp = temp->next;
+		} while (temp != node);
+		auto old_min = min;
+		delete old_min;
+		min = new_min;
+	}
+	traverse(min);
 }
 
 void common_heap::decrease(int identifier, int key)
@@ -24,7 +94,6 @@ void common_heap::decrease(int identifier, int key)
 	auto node = find(min, identifier);
 	if (node != nullptr)
 	{
-		//std::cout << "Old key: " << node->key << ", New key: " << key << std::endl;
 		if (node->key < key)
 			return;
 		node->key = key;
@@ -45,7 +114,7 @@ void common_heap::decrease(int identifier, int key)
 		}
 	}
 	//dev
-	traverse();
+	traverse(min);
 }
 
 node * common_heap::find(node * heap, int identifier)
@@ -86,17 +155,41 @@ void common_heap::clear(node * heap)
 	}
 }
 
-void common_heap::traverse()
+void fibonacci_heap::common_heap::separate(node * node)
 {
-	node * copy = min;
+	if (node != nullptr)
+	{
+		auto temp = node;
+		do {
+			temp->marked = false;
+			temp->parent = nullptr;
+			temp = temp->next;
+		} while (temp != node);
+	}
+}
+
+void fibonacci_heap::common_heap::add(node * parent, node * child)
+{
+	child->previous = child->next = child;
+	child->parent = parent;
+	parent->degree++;
+	parent->child = merge(parent->child, child);
+}
+
+void common_heap::traverse(node * n)
+{
+	node * copy = n;
 	if (copy != nullptr) {
 		do {
 			std::cout << "(" << copy->key << "," << copy->identifier << ")";
+			std::cout << "[";
+			traverse(copy->child);
+			std::cout << "]";
 			copy = copy->next;
-			if (copy != min) {
+			if (copy != n) {
 				std::cout << "-->";
 			}
-		} while (copy != min && copy->next != nullptr);
+		} while (copy != n && copy->next != nullptr);
 		std::cout << std::endl;
 	}
 }
