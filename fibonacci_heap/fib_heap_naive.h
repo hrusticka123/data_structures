@@ -4,6 +4,8 @@ namespace fibonacci_heap
 {
 	class naive_heap : public common_heap
 	{
-
+	public:
+		naive_heap(size_t elements) : common_heap(elements) {};
+		virtual void decrease(int identifier, int key);
 	};
 }
